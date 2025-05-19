@@ -2,20 +2,17 @@
 
 export interface Product {
   id: number;
-  id_s: number;
   title: string;
   description: string;
   price: number;
-  date_pub: string;
-  date_buy?: string | null; // date_buy может быть null
+  pub_date: string;
   is_buy: boolean;
+  is_sell_now: boolean;
   image: string;
-  User: {
+  Seller: {
     id: number;
-    name: string;
+    user_name: string;
     rating: number;
     count_rating: number;
-  };
-  is_sell: boolean;
+  },
 }
-

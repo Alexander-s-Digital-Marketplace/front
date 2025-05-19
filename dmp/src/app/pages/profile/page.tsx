@@ -2,17 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import API_URL from "@/config";
+import {CORE_API_URL} from "@/config";
 import Cookies from "js-cookie";
 import MyProductCard from "@/components/MyProductCard";
 import { Product } from "@/types/Product";
 
 interface User {
-  name: string;
-  email: string;
+  user_name: string;
   rating: number;
   count_rating: number;
-  debug_wallet: number;
+  wallet_id: number;
 }
 
 const ProfilePage = () => {
@@ -35,7 +34,7 @@ const ProfilePage = () => {
         return;
       }
 
-      const response = await axios.get(`${API_URL}/protected/getProfile`, {
+      const response = await axios.get(`${CORE_API_URL}/Protected/GetMyProfile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -59,7 +58,7 @@ const ProfilePage = () => {
         return;
       }
 
-      const response = await axios.get(`${API_URL}/protected/getMyGoods`, {
+      const response = await axios.get(`${CORE_API_URL}/Protected/GetMyProduct`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -82,8 +81,8 @@ const ProfilePage = () => {
   };
 
   // Разделение товаров на три группы
-  const productsOnSale = myProducts.filter((product) => product.is_sell && !product.is_buy);
-  const productsNotOnSale = myProducts.filter((product) => !product.is_sell && !product.is_buy);
+  const productsOnSale = myProducts.filter((product) => product.is_sell_now && !product.is_buy);
+  const productsNotOnSale = myProducts.filter((product) => !product.is_sell_now && !product.is_buy);
   const productsSold = myProducts.filter((product) => product.is_buy);
 
   return (
@@ -106,23 +105,17 @@ const ProfilePage = () => {
           {!loading && !error && user && (
             <div className="bg-PastelBlue rounded-lg shadow-md p-6">
               <h2 className="text-2xl font-semibold text-DarkOceanBlue mb-4">
-                {user.name}
+                {user.user_name}
               </h2>
               <p className="text-DarkOceanBlue">
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p className="text-DarkOceanBlue">
-                <strong>Рейтинг:</strong> ✦{user.rating.toFixed(1)}
+                <strong>Рейтинг:</strong> ✦{user.rating.toFixed(2)}
               </p>
               <p className="text-DarkOceanBlue">
                 <strong>Количество оценок:</strong> {user.count_rating}
               </p>
               <p className="text-DarkOceanBlue">
                 <strong>Дебаг-кошелек:</strong>{" "}
-                {user.debug_wallet.toLocaleString("en", {
-                  useGrouping: true,
-                  maximumFractionDigits: 9,
-                })}{" "}
+                {user.wallet_id}
                 ETH
               </p>
             </div>

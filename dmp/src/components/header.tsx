@@ -1,5 +1,5 @@
-"use client";  // Эта директива сообщает Next.js, что компонент должен рендериться на клиенте
-
+  // Эта директива сообщает Next.js, что компонент должен рендериться на клиенте
+"use client";
 import React, { useState } from "react";
 import { FaSearch, FaShoppingCart, FaSign, FaSignOutAlt, FaUserCircle } from "react-icons/fa";  // Иконки из react-icons
 import { useRouter } from 'next/navigation';

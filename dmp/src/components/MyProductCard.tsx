@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { Product } from "@/types/Product";
-import API_URL from "@/config";
+import {CORE_API_URL} from "@/config";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -13,7 +13,7 @@ interface MyProductCardProps {
 const MyProductCard: React.FC<MyProductCardProps> = ({ product, onUpdate }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [isSell, setIsSell] = useState<boolean>(product.is_sell); // Локальное состояние для is_sell
+  const [isSell, setIsSell] = useState<boolean>(product.is_sell_now); // Локальное состояние для is_sell
 
   const handleToggleSell = async () => {
     if (product.is_buy) return; // Блокируем действие, если товар продан
@@ -29,26 +29,16 @@ const MyProductCard: React.FC<MyProductCardProps> = ({ product, onUpdate }) => {
         setLoading(false);
         return;
       }
-
-      // Выбираем эндпоинт и данные в зависимости от состояния
-      const endpoint = isSell
-        ? "/protected/disableProductCard"
-        : "/protected/enableProductCard";
-
-      // Отправка запроса на сервер
       await axios.post(
-        `${API_URL}${endpoint}`,
-        { id: product.id },
+        `${CORE_API_URL}/Protected/SwitchProduct`,
+        { id: product.id, is_sell_now: isSell},
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      // Обновляем локальное состояние
-      setIsSell(!isSell);
-
+      
       // Обновляем список товаров
       await onUpdate();
     } catch (error) {
@@ -92,7 +82,7 @@ const MyProductCard: React.FC<MyProductCardProps> = ({ product, onUpdate }) => {
             ETH
           </p>
           <p className="text-DarkOceanBlue text-sm">
-            Дата публикации: {product.date_pub.substring(0, 10)}
+            Дата публикации: {product.pub_date.substring(0, 10)}
           </p>
         </div>
 

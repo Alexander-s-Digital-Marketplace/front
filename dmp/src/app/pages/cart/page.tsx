@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Product } from "@/types/Product"; // Предполагаем, что тип Product уже определен в проекте
 import CartProductCard from "@/components/CartProductCard"; // Импортируем новую карточку для корзины
-import API_URL from "@/config";
+import {CORE_API_URL} from "@/config";
 import Cookies from "js-cookie";
 
 const CartPage = () => {
@@ -28,7 +28,7 @@ const CartPage = () => {
       }
 
       // Отправка GET-запроса для получения товаров из корзины
-      const response = await axios.get(`${API_URL}/protected/getCart`, {
+      const response = await axios.get(`${CORE_API_URL}/Protected/GetCart`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

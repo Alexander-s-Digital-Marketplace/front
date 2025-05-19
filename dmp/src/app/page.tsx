@@ -4,13 +4,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useRouter } from 'next/navigation';
-import API_URL from "@/config";
+import { AUTH_API_URL }from "@/config";
 
 const AuthPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailLogin, setEmailLogin] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -21,9 +22,9 @@ const AuthPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${API_URL}/login`, 
-        { name: username, password: password });
-      const token = response.data.token;
+      const response = await axios.post(`${AUTH_API_URL}/Login`, 
+        { email: emailLogin, password: password });
+      const token = response.data.accessToken;
       console.log('JWT Token:', token);
 
       const refreshToken = response.data.refreshToken;
@@ -44,8 +45,12 @@ const AuthPage = () => {
       alert("Пароли не совпадают");
       return;
     }
+    
+    const requestData = { user_name: name, email: email, password: registerPassword };
+    console.log("Отправляемый JSON:", JSON.stringify(requestData));
+  
     try {
-      await axios.post(`${API_URL}/registration`, { name, email, password: registerPassword });
+      await axios.post(`${AUTH_API_URL}/Register`, requestData);
       alert("Регистрация успешна! Теперь вы можете войти.");
     } catch (error) {
       console.error('Ошибка регистрации:', error);
@@ -156,8 +161,8 @@ const AuthPage = () => {
               <input
                 type="text"
                 id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={emailLogin}
+                onChange={(e) => setEmailLogin(e.target.value)}
                 className="bg-LightIceBlue shadow appearance-none rounded w-full py-2 px-3 text-DarkAquamarine leading-tight focus:outline-none focus:shadow-outline"
                 placeholder="Введите логин"
                 required

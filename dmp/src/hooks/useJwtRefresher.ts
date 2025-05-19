@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie"; // Подключаем js-cookie
-import API_URL from '@/config';
+import {AUTH_API_URL} from '@/config';
 
 const useJwtRefresher = () => {
   useEffect(() => {
@@ -15,11 +15,11 @@ const useJwtRefresher = () => {
       }
 
       try {
-        const response = await axios.post(`${API_URL}/refresh`, {
-            refresh_token: refreshToken,
+        const response = await axios.post(`${AUTH_API_URL}/RefreshToken`, {
+          refresh_token: refreshToken,
         });
-        const newAccessToken = response.data.token;
-        const newRefreshToken = response.data.refresh_token;
+        const newAccessToken = response.data.accessToken;
+        const newRefreshToken = response.data.refreshToken;
 
         // Сохраняем токен в куки через js-cookie
         Cookies.set("token", newAccessToken, {

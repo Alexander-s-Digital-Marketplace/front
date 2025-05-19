@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard';
 import { Product } from '@/types/Product';
 import axios from 'axios';
 import Cookies from 'js-cookie'; // Импортируем библиотеку для работы с cookies
-import API_URL from '@/config';
+import {CORE_API_URL} from '@/config';
 
 const FeedPage = () => {
   const [products, setProducts] = useState<Product[]>([]); // Состояние для хранения продуктов
@@ -23,7 +23,7 @@ const FeedPage = () => {
       }
 
       try {
-        const response = await axios.get(`${API_URL}/protected/getAllFeed`, {
+        const response = await axios.get(`${CORE_API_URL}/Protected/GetAllFeed`, {
           headers: {
             Authorization: `Bearer ${token}`, // Передаем токен в заголовке
           },
@@ -31,6 +31,7 @@ const FeedPage = () => {
 
         setProducts(response.data); // Получаем продукты из ответа
         console.log('Products:', response.data);
+        
       } catch (err) {
         setError('Error fetching products');
         console.error('Error fetching products:', err);

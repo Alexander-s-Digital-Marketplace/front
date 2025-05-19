@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Product } from '@/types/Product';
 import axios from "axios";
 import Cookies from "js-cookie";
-import API_URL from "@/config";
+import { CORE_API_URL} from "@/config";
 
 interface CartProductCardProps {
   product: Product;
@@ -30,7 +30,7 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
 
       // Отправка запроса на сервер для удаления товара из корзины
       await axios.post(
-        `${API_URL}/protected/removeFromCart`,
+        `${CORE_API_URL}/protected/removeFromCart`,
         { id: product.id }, // Тело запроса с ID товара
         {
           headers: {
@@ -58,7 +58,7 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
       }
   
       // Отправка запроса на сервер для добавления в корзину
-      const response = await axios.post(`${API_URL}/protected/buyGoods`,
+      const response = await axios.post(`${CORE_API_URL}/protected/buyGoods`,
         { id: product.id },
         {
           headers: {
@@ -90,7 +90,7 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
 
       // Отправка запроса на сервер для удаления товара из корзины
       await axios.post(
-        `${API_URL}/protected/deliveryGoods`,
+        `${CORE_API_URL}/protected/deliveryGoods`,
         { id: product.id }, // Тело запроса с ID товара
         {
           headers: {
@@ -142,10 +142,13 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
           <p className="text-DarkOceanBlue text-sm">{product.description}</p>
           <hr className="my-2 border-t border-DarkOceanBlue w-1/2" />
           <p className="text-DarkOceanBlue text-sm">
-            Продавец: {product.User.name}
+            Продавец: {product.Seller.user_name}
           </p>
           <p className="text-DarkOceanBlue text-sm">
-            ✦{product.User.rating} • {product.User.count_rating} оценок
+            ✦{Number(product.Seller.rating.toFixed(2)).toLocaleString("en", { 
+            useGrouping: false, 
+            maximumFractionDigits: 2
+          })} • {product.Seller.count_rating} оценок
           </p>
         </div>
 

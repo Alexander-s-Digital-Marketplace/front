@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie"; // Импортируем библиотеку для работы с cookies
 import { useRouter } from 'next/navigation';
-import API_URL from "@/config";
+import {CORE_API_URL} from "@/config";
 
 const CreateProductPage: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -22,14 +22,16 @@ const CreateProductPage: React.FC = () => {
       alert("Please upload an image.");
       return;
     }
-
+    
+    
     try {
       // Создаем FormData для отправки файла
       const formData = new FormData();
       formData.append("file", image);
       const token = Cookies.get('token'); // Получаем токен из cookies
       // Загружаем изображение на сервер
-      const uploadRes = await axios.post(`${API_URL}/protected/uploadProductImage`,
+      
+      const uploadRes = await axios.post(`${CORE_API_URL}/Protected/UploadProductImage`,
         formData,
         {
           headers: {
@@ -39,27 +41,19 @@ const CreateProductPage: React.FC = () => {
         }
       );
       const imageUrl = uploadRes.data.url;
-
-      const saveRes = await axios.post(`${API_URL}/protected/createItem`,
-        {content: inputValue},
-        {
-            headers: {
-              Authorization: `Bearer ${token}`, // Передаем токен в заголовке
-            },
-          }
-        );
-      const id_i = saveRes.data.id;
       // Формируем JSON с данными товара
       const productData = {
         title,
         description,
         price: Number(price),
         image: imageUrl, // Ссылка на загруженное изображение
-        id_i: Number(id_i),
+        Item: {
+          content: inputValue
+        }
       };
 
       // Отправляем данные товара на сервер
-      await axios.post(`${API_URL}/protected/createProductCard`,
+      await axios.post(`${CORE_API_URL}/Protected/CreateProduct`,
         productData,
         {
             headers: {

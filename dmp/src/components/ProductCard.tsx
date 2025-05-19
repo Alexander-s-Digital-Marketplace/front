@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Product } from '@/types/Product';
 import axios from "axios";
 import Cookies from "js-cookie";
-import API_URL from "@/config";
+import {CORE_API_URL} from "@/config";
 
 const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const [addedToCart, setAddedToCart] = useState(false); // Состояние для отслеживания добавления в корзину
@@ -18,8 +18,8 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   
       // Отправка запроса на сервер для добавления в корзину
       const response = await axios.post(
-        `${API_URL}/protected/addToCart`,
-        { id: productId },
+        `${CORE_API_URL}/Protected/SwitchProductCart`,
+        { product_id: productId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,10 +54,13 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
       <p className="text-DarkOceanBlue mt-1">{product.description}</p>
       <hr className="my-4 border-t border-DarkOceanBlue" />
       <p className="text-DarkOceanBlue mt-1 text-sm">
-        Продавец: {product.User.name}
+        Продавец: {product.Seller.user_name}
       </p>
       <p className="text-DarkOceanBlue mt-1 text-sm">
-        ✦{product.User.rating} • {product.User.count_rating} оценок
+        ✦{Number(product.Seller.rating.toFixed(2)).toLocaleString("en", { 
+          useGrouping: false, 
+          maximumFractionDigits: 2
+        })} • {product.Seller.count_rating} оценок
       </p>
 
       {/* Кнопка в левом нижнем углу */}
@@ -73,7 +76,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
 
       {/* Дата публикации в правом нижнем углу */}
       <p className="absolute right-4 bottom-4 text-gray-600 text-sm">
-        Дата публикации: {product.date_pub.substring(0, 10)}
+        Дата публикации: {product.pub_date.substring(0, 10)}
       </p>
       
       
