@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {CORE_API_URL} from "@/config";
+import { CORE_API_URL } from "@/config";
 import Cookies from "js-cookie";
 import MyProductCard from "@/components/MyProductCard";
 import { Product } from "@/types/Product";
@@ -16,9 +16,38 @@ interface User {
 
 const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [wallet, setWallet] = useState<string | null>(null);
+  const [balance, setBalance] = useState<number | null>(null);
   const [myProducts, setMyProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [newWallet, setNewWallet] = useState<string>("");
+  const [changeWalletMsg, setChangeWalletMsg] = useState<string | null>(null);
+
+  const handleChangeWallet = async () => {
+    setChangeWalletMsg(null);
+    try {
+      const token = Cookies.get("token");
+      if (!token) {
+        setChangeWalletMsg("Необходима авторизация.");
+        return;
+      }
+      // Заменить POST на нужный метод и URL если другой!
+      await axios.post(
+        `${CORE_API_URL}/Protected/UpdateWallet`, 
+        { wallet: newWallet }, // Если твой API ждет другой ключ — поменяй
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setChangeWalletMsg("Кошелек успешно обновлен!");
+      fetchWallet(); // обновляем кошелек после смены
+      fetchBalance();
+      setNewWallet("");
+    } catch (err:any) {
+      setChangeWalletMsg(
+        err.response?.data?.message || "Ошибка при смене кошелька"
+      );
+    }
+  };
 
   // Получение данных профиля
   const fetchUserProfile = async () => {
@@ -48,6 +77,56 @@ const ProfilePage = () => {
     }
   };
 
+  // Получение кошелька
+  const fetchWallet = async () => {
+    try {
+      setError(null);
+
+      const token = Cookies.get("token");
+
+      if (!token) {
+        setError("Необходима авторизация.");
+        return;
+      }
+
+      const response = await axios.get(`${CORE_API_URL}/Protected/GetWallet`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("wallet-data " + response.data)
+      setWallet(response.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+    }
+  };
+
+  // Получение баланса
+  const fetchBalance = async () => {
+    try {
+      setError(null);
+
+      const token = Cookies.get("token");
+
+      if (!token) {
+        setError("Необходима авторизация.");
+        return;
+      }
+
+      const response = await axios.get(`${CORE_API_URL}/Protected/GetBalance`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("balance-data " + response.data)
+      setBalance(response.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+    }
+  };
+
   // Получение списка товаров
   const fetchMyProducts = async () => {
     try {
@@ -72,7 +151,10 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchUserProfile();
+    fetchWallet();
     fetchMyProducts();
+    fetchBalance();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Обновление списка товаров
@@ -114,9 +196,12 @@ const ProfilePage = () => {
                 <strong>Количество оценок:</strong> {user.count_rating}
               </p>
               <p className="text-DarkOceanBlue">
-                <strong>Дебаг-кошелек:</strong>{" "}
-                {user.wallet_id}
-                ETH
+                <strong>Кошелек:</strong>{" "}
+                {wallet ? wallet : <>Загрузка...</>}
+              </p>
+              <p className="text-DarkOceanBlue">
+                <strong>Балланс:</strong>{" "}
+                {balance ? `${balance} ETH` : <>Загрузка...</>}
               </p>
             </div>
           )}
@@ -125,6 +210,39 @@ const ProfilePage = () => {
               Данные пользователя отсутствуют.
             </p>
           )}
+          <div className="bg-PastelBlue rounded-lg shadow-md p-6 mt-6">
+            <h2 className="text-lg font-semibold text-DarkOceanBlue mb-4">
+              Сменить кошелек
+            </h2>
+            <div className="mb-4">
+              <label className="block text-DarkOceanBlue mb-2" htmlFor="change-wallet">
+                Новый адрес кошелька:
+              </label>
+              <input
+                id="change-wallet"
+                type="text"
+                className="bg-LightIceBlue w-full px-3 py-2 border border-DarkAquamarine rounded text-DarkAquamarine"
+                value={newWallet}
+                onChange={e => setNewWallet(e.target.value)}
+                placeholder="0x..."
+              />
+            </div>
+            <label className="block text-CrimsonBlaze text-sm italic text-justify mb-2" htmlFor="wallet">
+                Пожалуйста, укажите действующий кошелек MetaMask, с которого будет производиться оплата товаров. В противном случае покупка не будет засчитана.
+            </label>
+            <button
+              className="bg-DarkSlateBlue hover:bg-DeepTealBlue text-white px-4 py-2 rounded  transition"
+              onClick={handleChangeWallet}
+              disabled={!newWallet}
+            >
+              Сменить кошелек
+            </button>
+            {changeWalletMsg && (
+              <p className="mt-2 text-center text-sm text-DarkOceanBlue">
+                {changeWalletMsg}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Правая колонка: Товары */}
@@ -152,7 +270,7 @@ const ProfilePage = () => {
             <MyProductCard
               key={product.id}
               product={product}
-              onUpdate={updateProducts} // Передаем функцию обновления
+              onUpdate={updateProducts}
             />
           ))}
 
@@ -166,7 +284,7 @@ const ProfilePage = () => {
             <MyProductCard
               key={product.id}
               product={product}
-              onUpdate={updateProducts} // Передаем функцию обновления
+              onUpdate={updateProducts}
             />
           ))}
         </div>

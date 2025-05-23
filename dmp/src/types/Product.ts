@@ -7,6 +7,7 @@ export interface Product {
   price: number;
   pub_date: string;
   is_buy: boolean;
+  is_rated: boolean;
   is_sell_now: boolean;
   image: string;
   Seller: {

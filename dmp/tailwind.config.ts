@@ -26,6 +26,7 @@ export default {
         WarmSand: '#E8DAB2',
         GoldenYellow: '#FFD275',
         CharcoalGray: '#2B2D42',
+        CrimsonBlaze: '#D7263D',
 
         // зеленая кнопка
         EmeraldGreen: '#57CC99',  //   CharcoalGray

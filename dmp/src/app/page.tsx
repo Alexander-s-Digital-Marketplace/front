@@ -14,6 +14,7 @@ const AuthPage = () => {
   const [emailLogin, setEmailLogin] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [wallet, setWallet] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,7 +47,7 @@ const AuthPage = () => {
       return;
     }
     
-    const requestData = { user_name: name, email: email, password: registerPassword };
+    const requestData = { user_name: name, email: email, password: registerPassword, wallet: wallet };
     console.log("Отправляемый JSON:", JSON.stringify(requestData));
   
     try {
@@ -137,6 +138,23 @@ const AuthPage = () => {
                   {showConfirmPassword ? "☆" : "★"}
                 </button>
               </div>
+            </div>
+            <div className="mb-4">
+              <label className="block text-DarkOceanBlue text-sm font-bold mb-2" htmlFor="wallet">
+                Кошелек MetaMask
+              </label>
+              <input
+                type="wallet"
+                id="wallet"
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
+                className="bg-LightIceBlue shadow appearance-none rounded w-full py-2 px-3 text-DarkAquamarine leading-tight focus:outline-none focus:shadow-outline"
+                placeholder="Введите кошелек"
+                required
+              />
+              <label className="block text-CrimsonBlaze text-sm italic text-justify mb-2" htmlFor="wallet">
+                Пожалуйста, укажите действующий кошелек MetaMask, с которого будет производиться оплата товаров. В противном случае покупка не будет засчитана.
+              </label>
             </div>
             <div className="flex items-center justify-between">
               <button

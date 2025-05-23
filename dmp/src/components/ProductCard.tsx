@@ -18,7 +18,7 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   
       // Отправка запроса на сервер для добавления в корзину
       const response = await axios.post(
-        `${CORE_API_URL}/Protected/SwitchProductCart`,
+        `${CORE_API_URL}/Protected/AddProductToCart`,
         { product_id: productId },
         {
           headers: {
