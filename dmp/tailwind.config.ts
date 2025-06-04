@@ -16,6 +16,8 @@ export default {
         LightIceBlue: '#CEE5F2',  //  DarkAquamarine
         PastelBlue: '#ACCBE1',    //  DarkOceanBlue
         GrayishBlue: '#7C98B3',   //  SoftSunsetOrange
+
+        //кнопка
         DarkSlateBlue: '#637081', //  WarmSand
         DeepTealBlue: '#536B78 ', //  GoldenYellow
 

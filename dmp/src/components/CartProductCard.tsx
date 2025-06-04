@@ -35,7 +35,6 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Состояния для рейтинга
   const [isRatingLoading, setIsRatingLoading] = useState(false);
   const [ratingError, setRatingError] = useState<string | null>(null);
   const [ratingHover, setRatingHover] = useState<number | null>(null);
@@ -187,7 +186,6 @@ const CartProductCard: React.FC<CartProductCardProps> = ({
     product.is_buy ? "bg-GrayishBlue" : "bg-PastelBlue"
   ].join(" ");
 
-  // Звездочки ПОД карточкой
   const renderRating = () => {
     if(!(product.is_buy && !product.is_rated)) return null;
     const stars = Array.from({ length: 10 }, (_, idx) => idx + 1);

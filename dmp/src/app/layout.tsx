@@ -1,6 +1,6 @@
 import Header from "@/components/header";
 import "./globals.css";
-import JwtRefresher from "@/components/JWTrefresher"; // Импортируем клиентский компонент
+import JwtRefresher from "@/components/JWTrefresher";
 
 export const metadata = {
   title: "Alexander's Digital marketplace",
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <JwtRefresher /> {/* Клиентский компонент для работы с токеном */}
+        <JwtRefresher />
         <Header />
         <main>{children}</main>
       </body>

@@ -1,9 +1,8 @@
-  // Эта директива сообщает Next.js, что компонент должен рендериться на клиенте
 "use client";
 import React, { useState } from "react";
-import { FaSearch, FaShoppingCart, FaSign, FaSignOutAlt, FaUserCircle } from "react-icons/fa";  // Иконки из react-icons
+import { FaSearch, FaShoppingCart, FaSign, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
-import Link from "next/link"; // Для навигации между страницами
+import Link from "next/link";
 import { FaPlus } from "react-icons/fa6";
 import Cookies from "js-cookie";
 
@@ -24,11 +23,11 @@ const Header: React.FC = () => {
   };
 
   const toProfile = async () => {
-    router.push('/pages/profile'); // Переход на страницу профиля
+    router.push('/pages/profile');
   };
 
   const toLogIn = async () => {
-    router.push('/'); // Переход на страницу профиля
+    router.push('/');
     Cookies.remove('token');
     localStorage.clear();
   };

@@ -61,13 +61,12 @@ const AuthPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-LightIceBlue">
       <div className="flex w-full max-w-4xl space-x-8">
-        {/* Карточка регистрации */}
         <div className="w-1/2 bg-PastelBlue shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <h2 className="text-DarkOceanBlue text-2xl font-bold mb-4 text-center">Регистрация</h2>
           <form onSubmit={handleRegister}>
             <div className="mb-4">
               <label className="block text-DarkOceanBlue text-sm font-bold mb-2" htmlFor="name">
-                Имя
+                Имя пользователя
               </label>
               <input
                 type="text"
@@ -75,7 +74,7 @@ const AuthPage = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="bg-LightIceBlue shadow appearance-none rounded w-full py-2 px-3 text-DarkAquamarine leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="Введите имя"
+                placeholder="Введите имя пользователя"
                 required
               />
             </div>
@@ -168,13 +167,12 @@ const AuthPage = () => {
           </form>
         </div>
 
-        {/* Карточка авторизации */}
         <div className="w-1/2 bg-PastelBlue shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col justify-center">
           <h2 className="text-DarkOceanBlue text-2xl font-bold mb-4 text-center">Вход</h2>
           <form onSubmit={handleLogin}>
             <div className="mb-4">
               <label className="block text-DarkOceanBlue text-sm font-bold mb-2" htmlFor="username">
-                Логин
+                Email
               </label>
               <input
                 type="text"
@@ -182,7 +180,7 @@ const AuthPage = () => {
                 value={emailLogin}
                 onChange={(e) => setEmailLogin(e.target.value)}
                 className="bg-LightIceBlue shadow appearance-none rounded w-full py-2 px-3 text-DarkAquamarine leading-tight focus:outline-none focus:shadow-outline"
-                placeholder="Введите логин"
+                placeholder="Введите email"
                 required
               />
             </div>

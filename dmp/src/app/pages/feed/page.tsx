@@ -4,17 +4,17 @@ import React, { useEffect, useState } from 'react';
 import ProductCard from '@/components/ProductCard';
 import { Product } from '@/types/Product';
 import axios from 'axios';
-import Cookies from 'js-cookie'; // Импортируем библиотеку для работы с cookies
+import Cookies from 'js-cookie';
 import {CORE_API_URL} from '@/config';
 
 const FeedPage = () => {
-  const [products, setProducts] = useState<Product[]>([]); // Состояние для хранения продуктов
-  const [loading, setLoading] = useState(true); // Состояние для загрузки
-  const [error, setError] = useState<string | null>(null); // Состояние для ошибки
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const token = Cookies.get('token'); // Получаем токен из cookies
+      const token = Cookies.get('token');
 
       if (!token) {
         setError('No JWT token found in cookies');
@@ -25,11 +25,11 @@ const FeedPage = () => {
       try {
         const response = await axios.get(`${CORE_API_URL}/Protected/GetAllFeed`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Передаем токен в заголовке
+            Authorization: `Bearer ${token}`,
           },
         });
 
-        setProducts(response.data); // Получаем продукты из ответа
+        setProducts(response.data);
         console.log('Products:', response.data);
         
       } catch (err) {
@@ -41,14 +41,14 @@ const FeedPage = () => {
     };
 
     fetchProducts();
-  }, []); // Эффект выполняется только один раз при монтировании компонента
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>; // Показываем "Загрузка", пока данные не загружены
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Показываем ошибку, если она произошла
+    return <div>Error: {error}</div>;
   }
 
   return (

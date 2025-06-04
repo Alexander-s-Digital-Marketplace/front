@@ -32,14 +32,13 @@ const ProfilePage = () => {
         setChangeWalletMsg("Необходима авторизация.");
         return;
       }
-      // Заменить POST на нужный метод и URL если другой!
       await axios.post(
         `${CORE_API_URL}/Protected/UpdateWallet`, 
-        { wallet: newWallet }, // Если твой API ждет другой ключ — поменяй
+        { wallet: newWallet },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setChangeWalletMsg("Кошелек успешно обновлен!");
-      fetchWallet(); // обновляем кошелек после смены
+      fetchWallet();
       fetchBalance();
       setNewWallet("");
     } catch (err:any) {
@@ -49,7 +48,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Получение данных профиля
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
@@ -77,7 +75,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Получение кошелька
   const fetchWallet = async () => {
     try {
       setError(null);
@@ -102,7 +99,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Получение баланса
   const fetchBalance = async () => {
     try {
       setError(null);
@@ -127,7 +123,6 @@ const ProfilePage = () => {
     }
   };
 
-  // Получение списка товаров
   const fetchMyProducts = async () => {
     try {
       const token = Cookies.get("token");
@@ -154,15 +149,12 @@ const ProfilePage = () => {
     fetchWallet();
     fetchMyProducts();
     fetchBalance();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Обновление списка товаров
   const updateProducts = async () => {
-    await fetchMyProducts(); // Повторное получение товаров
+    await fetchMyProducts();
   };
 
-  // Разделение товаров на три группы
   const productsOnSale = myProducts.filter((product) => product.is_sell_now && !product.is_buy);
   const productsNotOnSale = myProducts.filter((product) => !product.is_sell_now && !product.is_buy);
   const productsSold = myProducts.filter((product) => product.is_buy);
@@ -179,7 +171,6 @@ const ProfilePage = () => {
       {error && <p className="text-center text-red-500">Ошибка: {error}</p>}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto px-4">
-        {/* Левая колонка: Профиль */}
         <div>
           <h1 className="text-xl font-bold text-center text-DarkAquamarine mb-8">
             Обо мне
@@ -245,27 +236,23 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        {/* Правая колонка: Товары */}
         <div className="space-y-4">
           <h1 className="text-xl font-bold text-center text-DarkAquamarine mb-8">
             Мои товары
           </h1>
 
-          {/* Товары на продаже */}
           {productsOnSale.map((product) => (
             <MyProductCard
               key={product.id}
               product={product}
-              onUpdate={updateProducts} // Передаем функцию обновления
+              onUpdate={updateProducts}
             />
           ))}
 
-          {/* Первая разделительная линия */}
           {productsNotOnSale.length > 0 && (
             <hr className="my-2 border-t border-DarkOceanBlue" />
           )}
 
-          {/* Товары не на продаже */}
           {productsNotOnSale.map((product) => (
             <MyProductCard
               key={product.id}
@@ -274,12 +261,10 @@ const ProfilePage = () => {
             />
           ))}
 
-          {/* Вторая разделительная линия */}
           {productsSold.length > 0 && (
             <hr className="my-2 border-t border-DarkOceanBlue" />
           )}
 
-          {/* Проданные товары */}
           {productsSold.map((product) => (
             <MyProductCard
               key={product.id}

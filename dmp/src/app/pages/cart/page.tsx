@@ -2,23 +2,21 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Product } from "@/types/Product"; // Предполагаем, что тип Product уже определен в проекте
-import CartProductCard from "@/components/CartProductCard"; // Импортируем новую карточку для корзины
+import { Product } from "@/types/Product";
+import CartProductCard from "@/components/CartProductCard";
 import {CORE_API_URL} from "@/config";
 import Cookies from "js-cookie";
 
 const CartPage = () => {
-  const [cartItems, setCartItems] = useState<Product[]>([]); // Состояние для хранения товаров в корзине
+  const [cartItems, setCartItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Функция для получения товаров из корзины через GET-запрос
   const fetchCartItems = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Получаем токен из cookies
       const token = Cookies.get("token");
 
       if (!token) {
@@ -27,7 +25,7 @@ const CartPage = () => {
         return;
       }
 
-      // Отправка GET-запроса для получения товаров из корзины
+
       const response = await axios.get(`${CORE_API_URL}/Protected/GetCart`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -35,8 +33,8 @@ const CartPage = () => {
       });
 
       console.log("Cart items:", response.data);
-      // Устанавливаем товары в состояние
-      setCartItems(response.data || []); // Защищаем от null/undefined
+
+      setCartItems(response.data || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Неизвестная ошибка");
     } finally {
@@ -49,16 +47,14 @@ const CartPage = () => {
   }, []);
 
   const handleRemoveFromCart = (productId: number) => {
-    // Логика для удаления товара из корзины
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== productId));
-    // Здесь также можно отправить запрос на сервер для обновления корзины
   };
 
   const itemsToBuy = cartItems.filter((product) => !product.is_buy);
   const itemsBought = cartItems.filter((product) => product.is_buy);
 
   const updateCart = async () => {
-    await fetchCartItems(); // Повторное получение товаров
+    await fetchCartItems();
   };
   return (
     <div className="min-h-screen bg-LightIceBlue py-8">
@@ -66,15 +62,12 @@ const CartPage = () => {
         Корзина
       </h1>
 
-      {/* Статус загрузки */}
       {loading && (
         <p className="text-center text-DarkAquamarine">Загрузка товаров...</p>
       )}
 
-      {/* Ошибка при загрузке */}
       {error && <p className="text-center text-red-500">Ошибка: {error}</p>}
 
-      {/* Отображение товаров в корзине */}
       {!loading && !error && (
         <>
           {itemsToBuy.length > 0 && (
@@ -83,7 +76,7 @@ const CartPage = () => {
                 <CartProductCard
                   key={product.id}
                   product={product}
-                  onRemove={handleRemoveFromCart} // Передаем функцию удаления
+                  onRemove={handleRemoveFromCart}
                   onUpdate={updateCart}
                 />
               ))}
@@ -98,7 +91,7 @@ const CartPage = () => {
                   <CartProductCard
                     key={product.id}
                     product={product}
-                    onRemove={handleRemoveFromCart} // Передаем функцию удаления
+                    onRemove={handleRemoveFromCart}
                     onUpdate={updateCart}
                   />
                 ))}
@@ -106,7 +99,6 @@ const CartPage = () => {
             </>
           )}
 
-          {/* Если корзина пуста */}
           {itemsToBuy.length === 0 && itemsBought.length === 0 && (
             <p className="text-center text-gray-600">Ваша корзина пуста.</p>
           )}

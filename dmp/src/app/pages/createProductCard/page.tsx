@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie"; // Импортируем библиотеку для работы с cookies
+import Cookies from "js-cookie";
 import { useRouter } from 'next/navigation';
 import {CORE_API_URL} from "@/config";
 
@@ -25,39 +25,35 @@ const CreateProductPage: React.FC = () => {
     
     
     try {
-      // Создаем FormData для отправки файла
       const formData = new FormData();
       formData.append("file", image);
-      const token = Cookies.get('token'); // Получаем токен из cookies
-      // Загружаем изображение на сервер
+      const token = Cookies.get('token');
       
       const uploadRes = await axios.post(`${CORE_API_URL}/Protected/UploadProductImage`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Передаем токен в заголовке
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
       );
       const imageUrl = uploadRes.data.url;
-      // Формируем JSON с данными товара
       const productData = {
         title,
         description,
         price: Number(price),
-        image: imageUrl, // Ссылка на загруженное изображение
+        image: imageUrl,
         Item: {
           content: inputValue
         }
       };
 
-      // Отправляем данные товара на сервер
       await axios.post(`${CORE_API_URL}/Protected/CreateProduct`,
         productData,
         {
             headers: {
-              Authorization: `Bearer ${token}`, // Передаем токен в заголовке
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -82,7 +78,6 @@ const CreateProductPage: React.FC = () => {
       >
         <h1 className="text-DarkOceanBlue text-2xl font-bold mb-4">Новый товар</h1>
 
-        {/* Title */}
         <div className="mb-4">
           <label htmlFor="title" className="block text-sm font-medium text-DarkOceanBlue">
             Название
@@ -97,7 +92,6 @@ const CreateProductPage: React.FC = () => {
           />
         </div>
 
-        {/* Description */}
         <div className="mb-4">
           <label
             htmlFor="description"
@@ -114,7 +108,6 @@ const CreateProductPage: React.FC = () => {
           />
         </div>
 
-        {/* Price */}
         <div className="mb-4">
           <label htmlFor="price" className="block text-sm font-medium text-DarkOceanBlue">
             Цена
@@ -129,7 +122,7 @@ const CreateProductPage: React.FC = () => {
               className="text-DarkAquamarine bg-LightIceBlue p-2 w-full pl-16 rounded-lg focus:ring-2 focus:ring-DarkAquamarine outline-none"
               placeholder="0.0"
               min="0"
-              step="0.000000001" // Подходит для работы с дробными числами
+              step="0.000000001"
             />
             <div className="absolute inset-y-0 left-0 flex items-center pl-4 text-DarkAquamarine font-semibold">
               ETH
@@ -137,7 +130,6 @@ const CreateProductPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Image */}
         <div className="mb-4">
           <label htmlFor="image" className="block text-sm font-medium text-DarkOceanBlue  ">
             Загрузить фото товара
@@ -152,7 +144,6 @@ const CreateProductPage: React.FC = () => {
           />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className="bg-DarkSlateBlue hover:bg-DeepTealBlue text-white px-4 py-2 rounded-lg"
@@ -161,7 +152,6 @@ const CreateProductPage: React.FC = () => {
         </button>
       </form>
 
-      {/* Новая карточка */}
       <div className="bg-PastelBlue p-6 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-DarkOceanBlue text-xl font-bold mb-4">Ключ</h2>
         <div className="mb-4">
